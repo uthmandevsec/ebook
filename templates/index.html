@@ -1,0 +1,117 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Application Ebooks & Audio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    margin: 0; padding: 0;
+    color: #333;
+}
+
+header {
+    background: #4A90E2;
+    color: white;
+    padding: 1em;
+    text-align: center;
+}
+
+h1 {
+    margin: 0 0 0.2em 0;
+}
+
+main {
+    padding: 1em 2em;
+}
+
+.ebook-list {
+    list-style: none;
+    padding: 0;
+}
+
+.ebook-item {
+    background: white;
+    margin-bottom: 1em;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.actions {
+    margin-top: 1em;
+}
+
+.btn {
+    background-color: #4A90E2;
+    color: white;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    margin-right: 1em;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #357ABD;
+}
+
+.audio-player {
+    background: #e1f5fe;
+    padding: 1em;
+    margin-top: 2em;
+    border-radius: 5px;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    font-size: 0.9em;
+    padding: 1em;
+    color: #777;
+}
+
+</style>
+<body>
+    <header>
+        <h1>Bienvenue sur votre bibliothèque d'ebooks</h1>
+        <p>Sélectionnez un livre pour lire, télécharger ou écouter.</p>
+    </header>
+
+    <main>
+        <ul class="ebook-list">
+    {% for ebook in ebooks %}
+    <li class="ebook-item">
+        <h2>{{ ebook.title }}</h2>
+        <p>{{ ebook.content[:150] }}...</p>
+        <div class="actions">
+            <a href="{{ url_for('download_ebook', ebook_id=loop.index0) }}" class="btn">📥 Télécharger</a>
+            <a href="{{ url_for('listen_ebook', ebook_id=loop.index0) }}" class="btn">🎧 Écouter</a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+
+        {% if request.args.get('audio') %}
+        <!-- Player audio si un fichier audio est généré -->
+        <div class="audio-player">
+            <h3>Lecture audio en cours :</h3>
+            <audio controls autoplay>
+                <source src="{{ url_for('static', filename='audio/' + request.args.get('audio')) }}" type="audio/mpeg" />
+                Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>© 2025 Votre Nom - Démo Application Ebook Audio</p>
+    </footer>
+</body>
+</html>
